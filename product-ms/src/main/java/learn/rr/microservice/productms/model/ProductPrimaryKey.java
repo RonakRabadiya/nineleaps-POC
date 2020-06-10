@@ -1,11 +1,19 @@
 package learn.rr.microservice.productms.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @PrimaryKeyClass
 public class ProductPrimaryKey {
 
@@ -14,36 +22,4 @@ public class ProductPrimaryKey {
 
     @PrimaryKeyColumn(name = "supplierid",ordinal = 1,type = PrimaryKeyType.CLUSTERED)
     private UUID supplierId;
-
-    public ProductPrimaryKey() {
-    }
-
-    public ProductPrimaryKey(UUID id, UUID supplierId) {
-        this.id = id;
-        this.supplierId = supplierId;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getSupplierId() {
-        return supplierId;
-    }
-
-    public void setSupplierId(UUID supplierId) {
-        this.supplierId = supplierId;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductPrimaryKey{" +
-                "id=" + id +
-                ", supplierId=" + supplierId +
-                '}';
-    }
 }

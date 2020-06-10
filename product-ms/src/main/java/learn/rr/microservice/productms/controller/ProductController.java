@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,19 +42,19 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductDto productDto) throws BusinessException {
+    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductDto productDto) throws BusinessException {
         productService.createProduct(productDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{productid}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable("productid") UUID id, @RequestBody ProductDto productDto) throws BusinessException {
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable("productid") @NotNull UUID id, @Valid @RequestBody ProductDto productDto) throws BusinessException {
         ProductDto product = productService.updateProduct(id, productDto);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @DeleteMapping("/{productid}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("productid") UUID id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable("productid") @NotNull UUID id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

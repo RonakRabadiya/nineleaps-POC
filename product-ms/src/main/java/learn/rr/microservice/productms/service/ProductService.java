@@ -8,6 +8,11 @@ import learn.rr.microservice.productms.model.Product;
 import learn.rr.microservice.productms.model.ProductBySupplier;
 import learn.rr.microservice.productms.repository.ProductBySupplierRepository;
 import learn.rr.microservice.productms.repository.ProductRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.data.cassandra.core.query.CassandraPageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
 
     private ProductRepository productRepository;
@@ -23,15 +29,9 @@ public class ProductService {
 
     private ProductBySupplierRepository productBySupplierRepository;
 
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, ProductBySupplierRepository productBySupplierRepository) {
-        this.productRepository = productRepository;
-        this.productMapper = productMapper;
-        this.productBySupplierRepository = productBySupplierRepository;
-    }
-
     public List<ProductDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return productMapper.productsToProductDtos(products);
+        List<Product>  productSlices = productRepository.findAll() ;
+        return productMapper.productsToProductDtos(productSlices);
     }
 
     public List<ProductDto> getAllProductsByIds(List<UUID> productIds) {

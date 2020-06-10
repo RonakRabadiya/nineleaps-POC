@@ -13,6 +13,9 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends CassandraRepository<Product, ProductPrimaryKey> {
 
+
+
+
     Optional<Product> findByKeyId(UUID id);
 
     List<Product> findAllByKeyIdIn(List<UUID> ids);
