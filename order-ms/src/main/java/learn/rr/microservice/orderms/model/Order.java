@@ -1,16 +1,28 @@
 package learn.rr.microservice.orderms.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Table
 public class Order {
 
@@ -20,97 +32,21 @@ public class Order {
     private LocalDate date;
 
     @Column("customer_name")
+    @NotBlank(message = "Customer name required")
     private String customerName;
 
     @Column("customer_email")
+    @NotBlank(message = "Customer email required")
+    @Email(regexp = ".+@.+\\..+",message = "Not a valid email address")
     private String customerEmail;
 
     @Column("customer_address")
+    @NotBlank(message = "Customer address required")
     private String customerAddress;
 
     @Column("items")
+    @NotEmpty
+    @Valid
     private Set<Item> items;
     private double total;
-
-    public Order() {
-    }
-
-    public Order(UUID id, LocalDate date, String customerName, String customerEmail, String customerAddress, Set<Item> items, double total) {
-        this.id = id;
-        this.date = date;
-        this.customerName = customerName;
-        this.customerEmail = customerEmail;
-        this.customerAddress = customerAddress;
-        this.items = items;
-        this.total = total;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-
-    public String getCustomerAddress() {
-        return customerAddress;
-    }
-
-    public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
-    }
-
-    public Set<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(Set<Item> items) {
-        this.items = items;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", date=" + date +
-                ", customerName='" + customerName + '\'' +
-                ", customerEmail='" + customerEmail + '\'' +
-                ", customerAddress='" + customerAddress + '\'' +
-                ", items=" + items +
-                ", total=" + total +
-                '}';
-    }
 }
