@@ -33,7 +33,7 @@ public class ProductController {
 
     @ApiOperation(value = "retrive all products or filter products based on query input")
     @ApiParam(name = "products", value = "list of product id to be fetched")
-    @GetMapping
+    @GetMapping(headers = "API-VERSION=1")
     public List<ProductDto> getAllProducts(@RequestParam(name = "products",required = false, defaultValue = "") List<UUID> productIds) {
         if(productIds.isEmpty()) {
             return productService.getAllProducts();
@@ -43,27 +43,27 @@ public class ProductController {
     }
 
     @ApiOperation("retrive product by product id")
-    @GetMapping("/{productid}")
+    @GetMapping(value = "/{productid}",headers = "API-VERSION=1")
     public ProductDto getProductById(@PathVariable("productid") UUID id) throws BusinessException {
         return productService.getProductByProductId(id);
     }
 
     @ApiOperation("Create product")
-    @PostMapping
+    @PostMapping(headers = "API-VERSION=1")
     public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductDto productDto) throws BusinessException {
         productService.createProduct(productDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("Update product by id")
-    @PutMapping("/{productid}")
+    @PutMapping(value = "/{productid}",headers = "API-VERSION=1")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable("productid") @NotNull UUID id, @Valid @RequestBody ProductDto productDto) throws BusinessException {
         ProductDto product = productService.updateProduct(id, productDto);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @ApiOperation("Delete product")
-    @DeleteMapping("/{productid}")
+    @DeleteMapping(value = "/{productid}" ,headers = "API-VERSION=1")
     public ResponseEntity<Void> deleteProduct(@PathVariable("productid") @NotNull UUID id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
