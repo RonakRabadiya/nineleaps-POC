@@ -25,7 +25,7 @@ public class SupplierController {
 	}
 
 	@ApiOperation(value = "Retrive all available supplier",produces = "application/json")
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,headers = "API-VERSION=1")
 	public List<Supplier> getAllSuppliers() {
 		return supplierService.getAllSupplier();
 	}
@@ -38,14 +38,14 @@ public class SupplierController {
 	}
 
 	@ApiOperation(value = "Create new Supplier")
-	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,headers = "API-VERSION=1")
 	public ResponseEntity<Supplier> createSupplier(@RequestBody Supplier supplier) throws BusinessException {
 		supplierService.createSupplier(supplier);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@ApiOperation(value = "Update an existing supplier")
-	@PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE,headers = "API-VERSION=1")
 	public ResponseEntity<Supplier> updateSupplier(@PathVariable("id") UUID id,
 			@RequestBody Supplier supplier) throws BusinessException {
 		Supplier updatedSupplier = supplierService.updateSupplier(id,supplier);
@@ -53,7 +53,7 @@ public class SupplierController {
 	}
 
 	@ApiOperation(value = "Delete Supplier")
-	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE,headers = "API-VERSION=1")
 	public ResponseEntity<Void> deleteSupplier(@PathVariable("id") UUID id) {
 		supplierService.deleteSupplier(id);
 		return new ResponseEntity<>(HttpStatus.OK);
