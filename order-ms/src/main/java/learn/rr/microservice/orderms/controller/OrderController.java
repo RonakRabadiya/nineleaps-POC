@@ -1,5 +1,7 @@
 package learn.rr.microservice.orderms.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import learn.rr.microservice.orderms.model.Order;
 import learn.rr.microservice.orderms.service.OrderService;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api(tags = "Order microservice",value = "Order Controller" , description = "Controller for all order related operations")
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -23,6 +26,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @ApiOperation(value = "Create Order With list of items",code = 201,produces = "application/json")
     @PostMapping
     public ResponseEntity<Void> createOrder(@Valid  @RequestBody Order order){
         Order r = orderService.createOrder(order);

@@ -1,5 +1,8 @@
 package learn.rr.microservice.productms.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import learn.rr.microservice.productms.dto.ProductDto;
 import learn.rr.microservice.productms.exception.BusinessException;
 import learn.rr.microservice.productms.service.ProductService;
@@ -14,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
+@Api(tags = "product microservice",value = "Product Controller", description = "Controller for all product related operations")
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -27,6 +31,8 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @ApiOperation(value = "retrive all products or filter products based on query input")
+    @ApiParam(name = "products", value = "list of product id to be fetched")
     @GetMapping
     public List<ProductDto> getAllProducts(@RequestParam(name = "products",required = false, defaultValue = "") List<UUID> productIds) {
         if(productIds.isEmpty()) {
@@ -36,23 +42,27 @@ public class ProductController {
         }
     }
 
+    @ApiOperation("retrive product by product id")
     @GetMapping("/{productid}")
     public ProductDto getProductById(@PathVariable("productid") UUID id) throws BusinessException {
         return productService.getProductByProductId(id);
     }
 
+    @ApiOperation("Create product")
     @PostMapping
     public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductDto productDto) throws BusinessException {
         productService.createProduct(productDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @ApiOperation("Update product by id")
     @PutMapping("/{productid}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable("productid") @NotNull UUID id, @Valid @RequestBody ProductDto productDto) throws BusinessException {
         ProductDto product = productService.updateProduct(id, productDto);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
+    @ApiOperation("Delete product")
     @DeleteMapping("/{productid}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("productid") @NotNull UUID id) {
         productService.deleteProduct(id);
