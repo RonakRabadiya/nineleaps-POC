@@ -9,6 +9,8 @@ import learn.rr.microservice.supplierms.repository.SupplierRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,9 @@ public class SupplierService {
 
     private SupplierRepository supplierRepository;
     private SupplierByEmailRepository supplierByEmailRepository;
+
+    @Autowired
+    Environment env;
 
     public SupplierService(SupplierRepository supplierRepository, SupplierByEmailRepository supplierByEmailRepository) {
         this.supplierRepository = supplierRepository;

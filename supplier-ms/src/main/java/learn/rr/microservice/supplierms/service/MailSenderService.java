@@ -1,15 +1,14 @@
 package learn.rr.microservice.supplierms.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class MailSenderService {
-
-    @Autowired
-    private JavaMailSender mailSender ;
+    private  JavaMailSender mailSender;
 
     /**
      *

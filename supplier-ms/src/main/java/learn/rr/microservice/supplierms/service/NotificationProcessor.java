@@ -3,12 +3,10 @@ package learn.rr.microservice.supplierms.service;
 import learn.rr.microservice.supplierms.connector.rest.ProductRestConnector;
 import learn.rr.microservice.supplierms.model.Order;
 import learn.rr.microservice.supplierms.model.Product;
-import learn.rr.microservice.supplierms.model.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,7 +34,7 @@ public class NotificationProcessor {
                 System.out.println("to:"+to);
                 String suject= subjectTemplate.replaceAll("#productName#", p.getName());
                 System.out.println("subject"+suject);
-//                mailSenderService.sendSampleMail(to,"",suject,body);
+                mailSenderService.sendSampleMail(to,"",suject,body);
 
             }catch (Exception ex){
                 ex.printStackTrace();
