@@ -19,7 +19,6 @@ import java.util.UUID;
 
 @Api(tags = "product microservice",value = "Product Controller", description = "Controller for all product related operations")
 @RestController
-@RequestMapping("/products")
 public class ProductController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

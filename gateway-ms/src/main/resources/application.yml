@@ -1,0 +1,5 @@
+zuul:
+  routes:
+    product-ms: /v1/api/products/**
+    supplier-ms: /v1/api/suppliers/**
+    order-ms: /v1/api/orders**

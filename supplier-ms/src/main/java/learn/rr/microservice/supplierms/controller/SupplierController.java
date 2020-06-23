@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/suppliers")
 @Api(tags = "Supplier microservice", value = "Supplier Controller" ,description = "Controller to support all supplier related operations")
 public class SupplierController {
 

@@ -17,7 +17,6 @@ import java.util.List;
 
 @Api(tags = "Order microservice",value = "Order Controller" , description = "Controller for all order related operations")
 @RestController
-@RequestMapping("/orders")
 public class OrderController {
 
     private OrderService orderService;
