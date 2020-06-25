@@ -24,7 +24,7 @@ public class NotificationProcessor {
     public void processOrderCreated(Order order){
         List<String> ids = order.getItems().stream().map(item -> item.getProductId().toString()).collect(Collectors.toList());
         List<Product> products = connector.getAllSupplierForProducts(ids);
-        String message = "You have received an order for product: #productName#. ";
+        String message = "You have received an order for product: #productName#.";
         String subjectTemplate = "Order Received for #productName#";
         for(Product p  : products){
             try {
