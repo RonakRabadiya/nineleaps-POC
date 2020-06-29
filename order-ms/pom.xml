@@ -16,6 +16,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <cassandra-driver-core.version>2.1.5</cassandra-driver-core.version>
     </properties>
 
     <dependencies>
@@ -73,12 +74,23 @@
                     <groupId>org.junit.vintage</groupId>
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+            <version>${cassandra-driver-core.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
