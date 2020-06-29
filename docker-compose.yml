@@ -16,94 +16,6 @@ services:
         - /home/ronak/Documents/git-code/dockerCode/cassandra/store:/var/lib/cassandra
       ports:
         - "9042:9042"
-
-    zookeeper:
-      image: wurstmeister/zookeeper
-      ports:
-        - "2181:2181"
-      networks:
-        - dockernet
-  
-    kafka:
-      image: wurstmeister/kafka
-      depends_on:
-        - zookeeper      
-      environment:
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_LISTENERS: PLAINTEXT://:9092
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.16.2.10:9092
-        KAFKA_CREATE_TOPICS: "ORDER_CREATED_TOPIC:1:1:compact"
-      expose:
-        - "9093"
-        - "9092"
-      ports:
-        - "9092:9092"
-      networks:
-        dockernet:
-          ipv4_address: 172.16.2.10
-
-    #cassandra-init:
-     #   container_name: cassandra_init_script_runner
-      #  image: cassandra:3.11
-       # volumes:
-        #    - /home/ronak/Documents/git-code/dockerCode/cassandra/initScript/:/init/scripts
-        #    - /home/ronak/Documents/git-code/dockerCode/cassandra/store:/data
-        #command: cqlsh -f /init/scripts/data.cql cassandra
-        #links:
-        #    - cassandra-node1:cassandra
-        #restart: on-failure # Restart until we successfully run this script (it will fail until cassandra starts)
-        #networks:
-        #    - dockernet
-
-    discovery:
-      container_name: service_reqistry_and_discovey
-      image: discovery-ms
-      build:
-        context: discovery-ms
-        dockerfile: Dockerfile
-      volumes:
-        - /data/discovery-service
-      ports:
-        - "8761:8761"
-      restart: always
-      networks:
-        - dockernet
-
-    config-server:
-      container_name: external_config_server
-      image: poc-config-server
-      build:
-        context: config-server-ms
-        dockerfile: Dockerfile
-      volumes:
-        - /data/config-server
-      environment:
-        - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka
-      links:
-      - discovery
-      ports:
-        - "8888:8888"
-      restart: always
-      networks:
-        - dockernet
-
-    gateway-ms:
-      container_name: gateway_service
-      image: gateway-ms
-      build:
-        context: gateway-ms
-        dockerfile: Dockerfile
-      environment:
-        - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka -DCONFIG_SERVER=http://config-server:8888
-      links:
-        - discovery
-        - config-server
-      restart: always
-      ports:
-        - "8765:8765"
-      networks:
-        - dockernet
-      
     
     product-ms:
       container_name: product_service
@@ -113,12 +25,10 @@ services:
         dockerfile: Dockerfile
       restart: always
       environment:
-        - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka -DCONFIG_SERVER=http://config-server:8888 -DCASSANDRA_URI=cassandra -DCASSANDRA_PORT=9042 -DKAFKA_SERVER=172.17.0.1:9092
+        - JAVA_OPTS= -DCASSANDRA_URI=cassandra -DCASSANDRA_PORT=9042 -DDATA_CENTER=DATA
       links:
         - cassandra-node1:cassandra
-        - discovery
-        - config-server
-        - gateway-ms
+       
       restart: always
       networks:
         dockernet:
@@ -126,45 +36,6 @@ services:
       ports:
         - "8082:8082"
 
-    order-ms:
-      container_name: order_service
-      image: order-ms
-      build:
-        context: order-ms
-        dockerfile: Dockerfile
-      environment:
-        - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka -DKAFKA_SERVER=172.16.2.10:9092 -DCONFIG_SERVER=http://config-server:8888 -DCASSANDRA_URI=cassandra -DCASSANDRA_PORT=9042
-      links:
-        - cassandra-node1:cassandra
-        - discovery
-        - config-server
-        - gateway-ms
-      restart: always
-      networks:
-        dockernet:
-          ipv4_address: 172.16.2.12
-      ports:
-        - "8083:8083"
-
-    supplier-ms:
-      container_name: supplier_service
-      image: supplier-ms
-      build:
-        context: supplier-ms
-        dockerfile: Dockerfile
-      environment:
-        - JAVA_OPTS= -DEUREKA_SERVER=http://discovery:8761/eureka -DKAFKA_SERVER=172.16.2.10:9092 -DCONFIG_SERVER=http://config-server:8888 -DCASSANDRA_URI=cassandra -DCASSANDRA_PORT=9042 -DPRODUCT_MS=http://product-ms:8082 -Demail=testpoc162020@gmail.com -Demail.pass=testpoc@123
-      links:
-        - cassandra-node1:cassandra
-        - discovery
-        - config-server
-        - gateway-ms
-      restart: always
-      networks:
-        dockernet:
-          ipv4_address: 172.16.2.13
-      ports:
-        - "8081:8081"
 
 networks:
   dockernet:
