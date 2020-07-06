@@ -3,10 +3,10 @@ package learn.rr.microservice.productms;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class ProductMsApplicationTests {
 
-    @Test
+//    @Test
     void contextLoads() {
     }
 

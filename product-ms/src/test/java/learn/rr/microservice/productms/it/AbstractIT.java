@@ -31,7 +31,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
-public abstract  class AbstractIntegrationTest {
+public abstract  class AbstractIT {
     @Autowired
     private  CassandraAdminOperations adminTemplate ;
 

@@ -128,23 +128,6 @@
             <version>${cassandra-driver-core.version}</version>
             <optional>true</optional>
         </dependency>
-        <!-- <dependency>
-             <groupId>org.cassandraunit</groupId>
-             <artifactId>cassandra-unit-spring</artifactId>
-             <version>3.11.2.0</version>
-             <scope>test</scope>
-         </dependency>
-         <dependency>
-             <groupId>com.datastax.cassandra</groupId>
-             <artifactId>cassandra-driver-core</artifactId>
-             <version>3.9.0</version>
-         </dependency>
-         <dependency>
-             <groupId>com.datastax.cassandra</groupId>
-             <artifactId>cassandra-driver-mapping</artifactId>
-             <version>3.9.0</version>
-         </dependency>-->
-
     </dependencies>
 
 
@@ -153,6 +136,41 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId> <!-- surefire plugin version managed by Spring Boot -->
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unit-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skipTests>false</skipTests>
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>integration-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <skipTests>false</skipTests>
+                            <includes>
+                                <include>**/*IT.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -173,6 +191,54 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.3</version>
+                <executions>
+                    <execution>
+                        <id>coverage-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>coverage-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <!-- Threshold -->
+                    <execution>
+                        <id>coverage-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>learn.rr.microservice.productms.config.*</exclude>
+                                        <exclude>learn.rr.microservice.productms.ProductMsApplication</exclude>
+                                        <exclude>learn.rr.microservice.productms.dto.*</exclude>
+                                        <exclude>learn.rr.microservice.productms.model.*</exclude>
+                                        <exclude>learn.rr.microservice.productms.exception.*</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>80%</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

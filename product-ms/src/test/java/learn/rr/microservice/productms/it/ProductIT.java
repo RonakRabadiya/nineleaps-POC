@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
-class ProductIntegrationTest extends AbstractIntegrationTest {
+class ProductIT extends AbstractIT {
 
     @Autowired
     MockMvc mockMvc;

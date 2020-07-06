@@ -24,7 +24,7 @@ public class SwaggerConfiguration {
                 .apiInfo(getApiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("learn.rr.microservice.productms"))
-                .paths(PathSelectors.ant("/products/**"))
+                .paths(PathSelectors.ant("/**"))
 
                 .build();
     }
