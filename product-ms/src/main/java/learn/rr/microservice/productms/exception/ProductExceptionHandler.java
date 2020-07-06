@@ -29,6 +29,7 @@ public class ProductExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetails.add(ex.getErrorMessage());
         errorDetails.add(request.getDescription(false));
         Error error = new Error(new Date(),ex.getErrorCode(),errorDetails);
+        logger.error("Exception Occured: " ,ex);
         return new ResponseEntity<Object>(error,HttpStatus.valueOf(ErrorCode.Code.getCode(ex.getErrorCode())));
     }
 
@@ -39,6 +40,7 @@ public class ProductExceptionHandler extends ResponseEntityExceptionHandler {
             details.add(error.getDefaultMessage());
         }
         Error error = new Error(new Date(),"Validation Failed", details);
+        logger.error("Field Validation Failure: ",ex);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 

@@ -9,6 +9,7 @@ import learn.rr.microservice.productms.model.ProductBySupplier;
 import learn.rr.microservice.productms.repository.ProductBySupplierRepository;
 import learn.rr.microservice.productms.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.cassandra.core.query.CassandraPageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ProductService {
 
     private ProductRepository productRepository;
@@ -43,6 +45,7 @@ public class ProductService {
     public ProductDto getProductByProductId(UUID id) throws BusinessException {
         Optional<Product> product = productRepository.findByKeyId(id);
         if (!product.isPresent()) {
+            log.error("Product with id {} not found.",id);
             throw new BusinessException(ErrorCode.ERROR_CODE_PRODUCT_NOT_FOUND,"product not found");
         }
         return productMapper.productToProductDto(product.get());
@@ -51,6 +54,7 @@ public class ProductService {
     public ProductDto createProduct(ProductDto productDto) throws BusinessException {
         boolean isSupplierRegistered = checkForProductSupplierAlreadyRegistered(productDto.getSupplierId());
         if(isSupplierRegistered){
+            log.error("Supplier is already registered with other product.");
             throw new BusinessException(ErrorCode.ERROR_CODE_SUPPLIER_ALREAD_REGISTERED,"Supplier is already registered with some other product");
         }
         Product product = productMapper.productDtoToProduct(productDto);
@@ -65,17 +69,20 @@ public class ProductService {
     }
 
     private void saveProductEntities(ProductDto productDto) {
+        log.info("START|create product by supplier");
         ProductBySupplier productBySupplier = productMapper.productDtoToProductBySupplier(productDto);
-        System.out.println("productBySupplier"+productBySupplier);
         productBySupplierRepository.save(productBySupplier);
+        log.info("END|create product by supplier");
     }
 
     public ProductDto updateProduct(UUID id, ProductDto productDto) throws BusinessException {
         Optional<Product> savedProduct = productRepository.findByKeyId(id);
         if (!savedProduct.isPresent()) {
+            log.error("product not found with product_id={}",id);
             throw new BusinessException(ErrorCode.ERROR_CODE_PRODUCT_NOT_FOUND,"product not found");
         }
         if(!savedProduct.get().getKey().getSupplierId().equals(productDto.getSupplierId())){
+            log.error("Supplier can not be changed");
             throw new BusinessException(ErrorCode.BUSINESS_ERROR,"You Can not change supplier id. Please delete product and register again with different supplier");
         }
         productDto.setId(id);
@@ -86,11 +93,11 @@ public class ProductService {
     }
 
     private void updateProductEntities(UUID supplierId, ProductDto productDto) {
+        log.info("START| update product by supplier");
         productBySupplierRepository.deleteById(supplierId);
         ProductBySupplier productBySupplier = productMapper.productDtoToProductBySupplier(productDto);
-        System.out.println(productBySupplier);
-
         productBySupplierRepository.save(productBySupplier);
+        log.info("END| update product by supplier");
     }
 
 
