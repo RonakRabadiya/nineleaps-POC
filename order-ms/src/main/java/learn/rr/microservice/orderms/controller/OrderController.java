@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import learn.rr.microservice.orderms.model.Order;
 import learn.rr.microservice.orderms.service.OrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Api(tags = "Order microservice",value = "Order Controller" , description = "Controller for all order related operations")
 @RestController
+@Slf4j
 public class OrderController {
 
     private OrderService orderService;
@@ -28,8 +30,9 @@ public class OrderController {
     @ApiOperation(value = "Create Order With list of items",code = 201,produces = "application/json")
     @PostMapping(headers = "API-VERSION=1")
     public ResponseEntity<Void> createOrder(@Valid  @RequestBody Order order){
+        log.info("[POST] request received for create order");
         Order r = orderService.createOrder(order);
-        System.out.println("Created ORder ::: " + r);
+        log.debug("Created order {}",r);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

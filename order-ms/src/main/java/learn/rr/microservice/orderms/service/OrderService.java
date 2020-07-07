@@ -3,6 +3,7 @@ package learn.rr.microservice.orderms.service;
 import learn.rr.microservice.orderms.kafka.producer.MessageSender;
 import learn.rr.microservice.orderms.model.Order;
 import learn.rr.microservice.orderms.repository.OrderRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +16,8 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class OrderService {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${spring.kafka.topic.order.created}")
     private String ORDER_CREATED_TOPIC;
@@ -37,7 +37,7 @@ public class OrderService {
         order.setTotal(total);
         order.setDate(LocalDate.now());
         Order savedOrder =  orderRepository.save(order);
-        logger.info("Order Saved :: " + savedOrder);
+        log.debug("order saved {}",savedOrder);
         sender.send(ORDER_CREATED_TOPIC,savedOrder);
         return savedOrder;
     }
